@@ -1,0 +1,532 @@
+* {
+    box-sizing: border-box;
+    padding: 0%;
+    margin: 0%;
+}
+
+body {
+    background: #0A0A0A;
+}
+
+
+main {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn {
+    background-color: #EA2E40;
+    color: white;
+    border: none;
+    box-shadow: 2px 2px 10px black;
+}
+
+button i:hover {
+    color: #EA2E40;
+    animation-name: spin;
+    animation-duration: 1s;
+    animation-delay: 0ms;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+/* 
+$ruler: 16px;
+$white: #feeeee;
+$color-bg: #272727;
+$color-shadow: #141414;
+$color-white: #212121;
+ */
+
+.hold {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.icons {
+    width: 10%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    color: white;
+}
+
+.nav-items-1 {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+
+.o-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.omain {
+    width: 100%;
+    height: 75%;
+    background: gold;
+}
+
+.icon-hold {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.icon {
+    width: 60%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    z-index: 999;
+    background-color: black;
+}
+
+
+
+
+
+.sidebar {
+    width: 20%;
+    height: 100%;
+    color: white;
+    font-variant: small-caps;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+
+}
+
+
+.logo {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 60%;
+    height: auto;
+}
+
+.pro-search {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.pro-search input {
+    width: 85%;
+    height: 70%;
+    border-radius: 30px;
+    border: none;
+    font-size: 0.85rem;
+    padding-left: 2%;
+}
+
+.pro-search button {
+    width: 15%;
+    height: 70%;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.pro-container {
+    width: 100%;
+    height: 80%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.sidebar-link:hover {
+    background: #EA2E40;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sidebar-link button {
+    color: white;
+    border: none;
+    background: transparent;
+}
+
+
+.btn-holder {
+    width: 100%;
+}
+
+.sidebar-link {
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    margin-bottom: 2%;
+    text-align: left;
+    padding: 2%;
+    background: black;
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-link i {
+    color: white;
+    margin: 20px;
+}
+
+.active-project {
+    background-color: #EA2E40;
+}
+
+.main {
+    width: 77%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    overflow-y: scroll;
+}
+
+.head {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.heading {
+    width: 100%;
+    height: 30%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 2%;
+
+}
+
+.search {
+    width: 100%;
+    height: 50%;
+}
+
+.bar-holder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.searchbar {
+    width: 75%;
+    height: 100%;
+    border-radius: 20px;
+    background: black;
+    border: 2px solid white;
+    padding-left: 3%;
+}
+
+.search-btn {
+    width: 15%;
+    height: 100%;
+    border-radius: 25px;
+
+}
+
+.search-btn:hover {
+    background: #EA2E40;
+    box-shadow: 2px 2px 10px #be081b;
+    font-weight: bolder;
+}
+
+
+.table-hold {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2%;
+    padding: 1%;
+}
+
+.card {
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #272727;
+    border-radius: 20px;
+    box-shadow: -5px -5px 20px #212121, 5px 5px 20px #141414;
+    color: white;
+    padding: 1%;
+    padding-left: 2%;
+}
+
+.info {
+    width: 90%;
+    height: 15%;
+}
+
+.add {
+    width: 90%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.check {
+    height: 80%;
+    aspect-ratio: 1/1;
+    border-radius: 8px;
+    background-color: aliceblue;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+.check:hover {
+    border: 3px solid #EA2E40;
+}
+
+.check form {
+    width: 100%;
+    height: 100%;
+}
+
+.check button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+}
+
+.text {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.title {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.t {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    border: none;
+    padding-left: 2%;
+}
+
+.e-info {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.date {
+    width: 20%;
+    height: 100%;
+    border-radius: 25px;
+    background: #EA2E40;
+    font-size: 0.65rem;
+    padding: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    border: none;
+}
+
+.d {
+    width: 15%;
+    margin-left: 2%;
+    font-family: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 2%;
+    padding-right: 2%;
+
+}
+
+.pri {
+    width: 10%;
+    height: 100%;
+    margin-right: 2%;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.priority {
+    width: 20%;
+    height: 100%;
+    border-radius: 25px;
+    background-color: #EA2E40;
+    font-size: 0.75rem;
+    padding: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.tags {
+    width: 30%;
+    height: 100%;
+}
+
+.actions {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.task-add {
+    width: 15%;
+    height: 100%;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.complete {
+    width: 80%;
+    height: 100%;
+}
+
+.delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 100%;
+}
+
+.delete button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 5%;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #EA2E40;
+    border-radius: 25px;
+}
+
+.mobile{
+    display: none;
+}
+
+@media only screen and (max-width: 600px){
+    
+    nav{
+        visibility: hidden;
+    }
+
+    main{
+        display: none;
+    }
+
+    .mobile{
+        display: block;
+        color: white;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+}

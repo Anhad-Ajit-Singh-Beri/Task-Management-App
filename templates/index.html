@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block main %}
+
+<div class="sidebar">
+    <div class="logo">
+        <img src="../static/assets/logo.png" alt="Nova Quest" id="logo">
+    </div>
+    <form class="pro-search" action="/create_project" method="post">
+        <!-- Add Plus Icon -->
+        <input type="text" required name="project" placeholder="Add Project" />
+        <button type="submit"><i class="fa-solid fa-plus"></i></button>
+    </form>
+    <div class="pro-container">
+        {% for project in projects %}
+        <form class="btn-holder" action="{{ url_for('index', project_id=project[0]) }}" method="post">
+            <button class="sidebar-link" onclick="changeColor(this)" id="pro" type="submit">{{project[1]}}</button>
+        </form>
+        {% endfor %}
+    </div>
+    <form class="sidebar-link" action="/logout" method="post">
+        <button type="submit"><i class="fa-solid fa-user"></i>Logout</button>
+    </form>
+</div>
+<div class="main">
+    {% if project_id %}
+    <div class="head">
+        <div class="heading">{{ current[0] }}</div>
+        <div class="search">
+            <form class="bar-holder" action="{{ url_for('search_tasks', project_id=project_id) }}" method="get">
+                <i class="fa-solid fa-magnifying-glass" style="color: white;"></i>
+                <input type="text" class="form-control searchbar" placeholder="Search Task Name" name="search_title"
+                    required>
+                <button class="btn search-btn" type="submit">Search</button>
+                <a class="btn search-btn" href="{{ url_for('search_tasks', project_id=project_id, cancel_search='true') }}">Cancel</a>
+            </form>
+        </div>
+    </div>
+    <div class="table-hold">
+        <form action="{{ url_for('task', project_id=project_id )}}" method="post" class="card add">
+            <div class="text">
+                <input class="title t" type="text" placeholder="Task Title..." name="title">
+            </div>
+            <input class="date d" type="date" placeholder="Date" name="due_date">
+            <select class="pri" name="priority">
+                <option disabled selected>Priority</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+            </select>
+            <button type="submit" class="btn task-add">Add Task</button>
+        </form>
+        {% else %}
+        <h2>Create a new project or select an existing one</h2>
+        {% endif %}
+        {% for task in tasks %}
+        <div class="card info">
+            <div class="check">
+                <form action="{{ url_for('complete_task', task_id=task[0]) }}" method="post">
+                    <button type="submit"> </button>
+                </form>
+            </div>
+            <div class="text">
+                <div class="title">{{ task[1] }}</div>
+                <div class="e-info">
+                    <div class="date">{{ task[3] }}</div>
+                    <div class="priority">{{task[5]}}</div>
+                </div>
+            </div>
+            <div class="actions">
+                <div class="complete">
+                </div>
+                <div class="delete">
+                    <form action="{{ url_for('delete_task', task_id=task[0]) }}" method="post">
+                        <button type="submit"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </div>
+                <div class="edit">
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ task[0] }}">
+                        <i class="fa-solid fa-edit"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Task Modal -->
+        <div class="modal fade" id="editTaskModal{{ task[0] }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ task[0] }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editTaskModalLabel{{ task[0] }}">Edit Task</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('edit_task', task_id=task[0]) }}" method="post">
+                            <div class="mb-3">
+                                <label for="title{{ task[0] }}" class="form-label">Task Title</label>
+                                <input type="text" class="form-control" id="title{{ task[0] }}" name="title" value="{{ task[1] }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="due_date{{ task[0] }}" class="form-label">Due Date</label>
+                                <input type="date" class="form-control" id="due_date{{ task[0] }}" name="due_date" value="{{ task[3] }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="priority{{ task[0] }}" class="form-label">Priority</label>
+                                <select class="form-select" id="priority{{ task[0] }}" name="priority">
+                                    <option value="High" {% if task[5] == 'High' %}selected{% endif %}>High</option>
+                                    <option value="Medium" {% if task[5] == 'Medium' %}selected{% endif %}>Medium</option>
+                                    <option value="Low" {% if task[5] == 'Low' %}selected{% endif %}>Low</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description{{ task[0] }}" class="form-label">Description</label>
+                                <textarea class="form-control" id="description{{ task[0] }}" name="description">{{ task[2] }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="category{{ task[0] }}" class="form-label">Category</label>
+                                <input type="text" class="form-control" id="category{{ task[0] }}" name="category" value="{{ task[6] }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
