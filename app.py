@@ -3,12 +3,13 @@ from flask_session import Session
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_pyfile('config.py')
 app.config['DATABASE'] = './database.db'
 app.config["SESSION_PERMANENT"] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config["SESSION_TYPE"] = "filesystem"
-app.config['SECRET_KEY'] = 'h3p6n9250p83yf482uhd'
+app.config['SECRET_KEY'] = app.config['SECRET_KEY']
 Session(app)
 
 def create_tables():
@@ -368,6 +369,7 @@ def edit_task(task_id):
     description = request.form.get('description')
     category = request.form.get('category')
 
+    project_id = cursor.execute("SELECT project_id FROM tasks WHERE id = ? AND user_id = ?", (task_id, session['user_id'])).fetchall()[0][0]
     cursor.execute("""
         UPDATE tasks
         SET title = ?, due_date = ?, priority = ?, desc = ?, category = ?
@@ -377,7 +379,7 @@ def edit_task(task_id):
     db.commit()
     db.close()
 
-    return redirect(url_for('index', project_id=request.form.get('project_id')))
+    return redirect(url_for('index', project_id=project_id ))
 
 
 if __name__ == '__main__':
