@@ -3,6 +3,7 @@ from flask_session import Session
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile('config.py')
 app.config['DATABASE'] = './database.db'
@@ -98,6 +99,7 @@ def index(project_id=None):
             # Fetch unique projects associated with user's tasks
             projects = cursor.execute("SELECT * FROM projects WHERE user_id = ?", (user_id,)).fetchall()
             current = cursor.execute("SELECT name FROM projects WHERE id =?", (project_id,)).fetchone()
+            points = cursor.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
             # Fetch tasks based on the selected project (if any)
             tasks = []
             if project_id:
@@ -105,7 +107,7 @@ def index(project_id=None):
             
             db.close()
 
-            return render_template('index.html', username=username, projects=projects, tasks=tasks, project_id = project_id, current=current)
+            return render_template('index.html', username=username, projects=projects, tasks=tasks, project_id = project_id, current=current, points=points)
 
     return render_template('register.html')
 
@@ -291,6 +293,7 @@ def search_tasks(project_id):
 
         projects = cursor.execute("SELECT * FROM projects WHERE user_id = ?", (user_id,)).fetchall()
         current = cursor.execute("SELECT name FROM projects WHERE id =?", (project_id,)).fetchone()
+        points = cursor.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
 
         # If cancel search is requested, fetch all tasks
         if cancel_search:
@@ -301,27 +304,10 @@ def search_tasks(project_id):
 
         db.close()
 
-        return render_template('index.html', tasks=tasks, project_id=project_id, projects=projects, current=current)
+        return render_template('index.html', tasks=tasks, project_id=project_id, projects=projects, current=current, points=points)
 
     return render_template('login.html')
 
-
-
-def get_user_points(user_id):
-    db = get_db()
-    cursor = db.cursor()
-    points = cursor.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
-    db.close()
-    return points[0] if points else 0
-
-
-# @app.route('/show/<int:project_id>', methods=['GET'])
-# def show():
-#     user_id = session['user_id']
-
-#     db = get_db()
-#     cursor = db.cursor()
-#     tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status = ?", (user_id,project_id, "pending")).fetchall()
 
 
 @app.route('/complete_task/<int:task_id>', methods=['POST'])

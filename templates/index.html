@@ -22,10 +22,28 @@ Home
         </form>
         {% endfor %}
     </div>
+    <div style="width: 100%; display: flex; justify-content: flex-start; padding-left: 20px;">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+            aria-controls="offcanvasScrolling"><i class="fa-gear fa-solid"></i> Settings</button>
+    </div>
     <form class="sidebar-link" action="/logout" method="post">
         <button type="submit"><i class="fa-solid fa-user"></i>Logout</button>
     </form>
 </div>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+    id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Name</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <h3><strong>Points: </strong>{{points[0]}}</h3>
+    </div>
+</div>
+
+
+
 <div class="main">
     {% if project_id %}
     <div class="head">
@@ -36,7 +54,8 @@ Home
                 <input type="text" class="form-control searchbar" placeholder="Search Task Name" name="search_title"
                     required>
                 <button class="btn search-btn" type="submit">Search</button>
-                <a class="btn search-btn" href="{{ url_for('search_tasks', project_id=project_id, cancel_search='true') }}">Cancel</a>
+                <a class="btn search-btn"
+                    href="{{ url_for('search_tasks', project_id=project_id, cancel_search='true') }}">Cancel</a>
             </form>
         </div>
     </div>
@@ -80,7 +99,8 @@ Home
                     </form>
                 </div>
                 <div class="edit">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ task[0] }}">
+                    <button type="button" class="btn" data-bs-toggle="modal"
+                        data-bs-target="#editTaskModal{{ task[0] }}">
                         <i class="fa-solid fa-edit"></i>
                     </button>
                 </div>
@@ -88,7 +108,8 @@ Home
         </div>
 
         <!-- Edit Task Modal -->
-        <div class="modal fade" id="editTaskModal{{ task[0] }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ task[0] }}" aria-hidden="true">
+        <div class="modal fade" id="editTaskModal{{ task[0] }}" tabindex="-1"
+            aria-labelledby="editTaskModalLabel{{ task[0] }}" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -99,27 +120,31 @@ Home
                         <form action="{{ url_for('edit_task', task_id=task[0]) }}" method="post">
                             <div class="mb-3">
                                 <label for="title{{ task[0] }}" class="form-label">Task Title</label>
-                                <input type="text" class="form-control" id="title{{ task[0] }}" name="title" value="{{ task[1] }}" required>
+                                <input type="text" class="form-control" id="title{{ task[0] }}" name="title"
+                                    value="{{ task[1] }}" required>
                             </div>
                             <div class="mb-3">
                                 <label for="due_date{{ task[0] }}" class="form-label">Due Date</label>
-                                <input type="date" class="form-control" id="due_date{{ task[0] }}" name="due_date" value="{{ task[3] }}">
+                                <input type="date" class="form-control" id="due_date{{ task[0] }}" name="due_date"
+                                    value="{{ task[3] }}">
                             </div>
                             <div class="mb-3">
                                 <label for="priority{{ task[0] }}" class="form-label">Priority</label>
                                 <select class="form-select" id="priority{{ task[0] }}" name="priority">
-                                    <option value="High" {% if task[5] == 'High' %}selected{% endif %}>High</option>
-                                    <option value="Medium" {% if task[5] == 'Medium' %}selected{% endif %}>Medium</option>
-                                    <option value="Low" {% if task[5] == 'Low' %}selected{% endif %}>Low</option>
+                                    <option value="High" {% if task[5]=='High' %}selected{% endif %}>High</option>
+                                    <option value="Medium" {% if task[5]=='Medium' %}selected{% endif %}>Medium</option>
+                                    <option value="Low" {% if task[5]=='Low' %}selected{% endif %}>Low</option>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="description{{ task[0] }}" class="form-label">Description</label>
-                                <textarea class="form-control" id="description{{ task[0] }}" name="description">{{ task[2] }}</textarea>
+                                <textarea class="form-control" id="description{{ task[0] }}"
+                                    name="description">{{ task[2] }}</textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="category{{ task[0] }}" class="form-label">Category</label>
-                                <input type="text" class="form-control" id="category{{ task[0] }}" name="category" value="{{ task[6] }}">
+                                <input type="text" class="form-control" id="category{{ task[0] }}" name="category"
+                                    value="{{ task[6] }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Save changes</button>
                         </form>
