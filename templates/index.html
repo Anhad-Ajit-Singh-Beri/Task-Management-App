@@ -5,29 +5,32 @@ Home
 {% endblock %}
 
 {% block main %}
-
 <div class="sidebar">
     <div class="logo">
-        <img src="../static/assets/logo.png" alt="Nova Quest" id="logo">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Nova Quest" id="logo">
     </div>
     <form class="pro-search" action="/create_project" method="post">
-        <!-- Add Plus Icon -->
         <input type="text" required name="project" placeholder="Add Project" />
-        <button type="submit"><i class="fa-solid fa-plus"></i></button>
+        <button type="submit" aria-label="Add Project"><i class="fa-solid fa-plus"></i></button>
     </form>
     <div class="pro-container">
         {% for project in projects %}
         <form class="btn-holder" action="{{ url_for('index', project_id=project[0]) }}" method="post">
-            <button class="sidebar-link" onclick="changeColor(this)" id="pro" type="submit">{{project[1]}}</button>
+            <button class="sidebar-link" onclick="changeColor(this)" id="pro" type="submit">{{ project[1] }}</button>
         </form>
         {% endfor %}
     </div>
-    <div style="width: 100%; display: flex; justify-content: flex-start; padding-left: 20px;">
+    <div class="button-container">
         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
-            aria-controls="offcanvasScrolling"><i class="fa-gear fa-solid"></i> Settings</button>
+            aria-controls="offcanvasScrolling">
+            <i class="fa-gear fa-solid"></i> Settings
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal">
+            View Calendar Events
+        </button>
     </div>
     <form class="sidebar-link" action="/logout" method="post">
-        <button type="submit"><i class="fa-solid fa-user"></i>Logout</button>
+        <button type="submit" aria-label="Logout"><i class="fa-solid fa-user"></i> Logout</button>
     </form>
 </div>
 
@@ -38,11 +41,9 @@ Home
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <h3><strong>Points: </strong>{{points[0]}}</h3>
+        <h3><strong>Points: </strong>{{ points[0] }}</h3>
     </div>
 </div>
-
-
 
 <div class="main">
     {% if project_id %}
@@ -60,12 +61,12 @@ Home
         </div>
     </div>
     <div class="table-hold">
-        <form action="{{ url_for('task', project_id=project_id )}}" method="post" class="card add">
+        <form action="{{ url_for('task', project_id=project_id) }}" method="post" class="card add">
             <div class="text">
-                <input class="title t" type="text" placeholder="Task Title..." name="title">
+                <input class="title t" type="text" placeholder="Task Title..." name="title" required>
             </div>
-            <input class="date d" type="date" placeholder="Date" name="due_date">
-            <select class="pri" name="priority">
+            <input class="date d" type="date" placeholder="Date" name="due_date" required>
+            <select class="pri" name="priority" required>
                 <option disabled selected>Priority</option>
                 <option>High</option>
                 <option>Medium</option>
@@ -80,27 +81,25 @@ Home
         <div class="card info">
             <div class="check">
                 <form action="{{ url_for('complete_task', task_id=task[0]) }}" method="post">
-                    <button type="submit"> </button>
+                    <button type="submit" aria-label="Complete Task"></button>
                 </form>
             </div>
             <div class="text">
                 <div class="title">{{ task[1] }}</div>
                 <div class="e-info">
                     <div class="date">{{ task[3] }}</div>
-                    <div class="priority">{{task[5]}}</div>
+                    <div class="priority">{{ task[5] }}</div>
                 </div>
             </div>
             <div class="actions">
-                <div class="complete">
-                </div>
                 <div class="delete">
                     <form action="{{ url_for('delete_task', task_id=task[0]) }}" method="post">
-                        <button type="submit"><i class="fa-solid fa-trash"></i></button>
+                        <button type="submit" aria-label="Delete Task"><i class="fa-solid fa-trash"></i></button>
                     </form>
                 </div>
                 <div class="edit">
                     <button type="button" class="btn" data-bs-toggle="modal"
-                        data-bs-target="#editTaskModal{{ task[0] }}">
+                        data-bs-target="#editTaskModal{{ task[0] }}" aria-label="Edit Task">
                         <i class="fa-solid fa-edit"></i>
                     </button>
                 </div>
@@ -126,11 +125,11 @@ Home
                             <div class="mb-3">
                                 <label for="due_date{{ task[0] }}" class="form-label">Due Date</label>
                                 <input type="date" class="form-control" id="due_date{{ task[0] }}" name="due_date"
-                                    value="{{ task[3] }}">
+                                    value="{{ task[3] }}" required>
                             </div>
                             <div class="mb-3">
                                 <label for="priority{{ task[0] }}" class="form-label">Priority</label>
-                                <select class="form-select" id="priority{{ task[0] }}" name="priority">
+                                <select class="form-select" id="priority{{ task[0] }}" name="priority" required>
                                     <option value="High" {% if task[5]=='High' %}selected{% endif %}>High</option>
                                     <option value="Medium" {% if task[5]=='Medium' %}selected{% endif %}>Medium</option>
                                     <option value="Low" {% if task[5]=='Low' %}selected{% endif %}>Low</option>
@@ -155,5 +154,55 @@ Home
         {% endfor %}
     </div>
 </div>
+
+<div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="calendarModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="calendarModalLabel">Calendar Events</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="calendarEvents"></div> <!-- Placeholder for calendar events -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    // JavaScript code to fetch and display calendar events
+    $(document).ready(function () {
+        // Function to fetch calendar events via AJAX
+        function fetchCalendarEvents() {
+            $.ajax({
+                url: '/calendar_events',
+                type: 'GET',
+                success: function (data) {
+                    // Process data (events) returned from the server
+                    console.log('Calendar events:', data);
+                    // Update calendar or handle data as needed
+                    // For example, if using FullCalendar:
+                    // $('#calendar').fullCalendar('addEventSource', data);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching calendar events:', error);
+                    // Handle error condition on the frontend
+                }
+            });
+        }
+
+        // Event listener for modal open event
+        $('#calendarModal').on('shown.bs.modal', function () {
+            fetchCalendarEvents();  // Fetch calendar events when modal is shown
+        });
+    });
+</script>
 
 {% endblock %}
