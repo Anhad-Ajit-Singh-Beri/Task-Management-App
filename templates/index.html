@@ -26,7 +26,10 @@ Home
             <i class="fa-gear fa-solid"></i> Settings
         </button>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal">
-            View Calendar Events
+            Calendar
+        </button>
+        <button type="button" onclick="startTimer()" class="btn btn-primary" data-toggle="modal" data-target="#pomodoroModal">
+            Pomodoro
         </button>
     </div>
     <form class="sidebar-link" action="/logout" method="post">
@@ -176,6 +179,28 @@ Home
     </div>
 </div>
 
+<div class="modal fade" id="pomodoroModal" tabindex="-1" role="dialog" aria-labelledby="pomodoroModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pomodoroModalLabel">Pomodoro Timer</h5>
+                <button type="button" onclick='stopTimer()' class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body pomodoro">
+                <div class="pomodoro-timer">
+                    <div id="timer-display">25:00</div>
+                    <button id="start-button" onclick="startTimer()">Start</button>
+                    <button id="stop-button" onclick="stopTimer()">Stop</button>
+                    <button id="reset-button" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Include jQuery and dependencies -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -225,6 +250,53 @@ Home
         // Optional: Add a button to manually fetch events
         document.getElementById('fetchEventsButton').addEventListener('click', fetchCalendarEvents);
     });
+
+    let timer;
+    let isRunning = false;
+    let isWorkSession = true; // Flag to track work/break session
+    let workTime = 3; // 25 minutes in seconds
+    let breakTime = 2; // 5 minutes in seconds
+    let timeLeft = workTime;
+
+    function updateDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer-display').innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+        if (isRunning) return;
+        isRunning = true;
+        timer = setInterval(() => {
+            timeLeft--;
+            updateDisplay();
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                isWorkSession = !isWorkSession;
+                timeLeft = isWorkSession ? workTime : breakTime;
+                updateDisplay();
+                if (isRunning) startTimer(); 
+            }
+        }, 1000);
+    }
+
+    
+    function stopTimer() {
+        clearInterval(timer);
+        isRunning = false;
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        isRunning = false;
+        isWorkSession = true;
+        timeLeft = workTime;
+        updateDisplay();
+    }
+
+
+    updateDisplay();
+
 </script>
 
 {% endblock %}

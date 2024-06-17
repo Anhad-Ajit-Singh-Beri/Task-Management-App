@@ -505,21 +505,21 @@ $color-white: #212121;
     border-radius: 25px;
 }
 
-.mobile{
+.mobile {
     display: none;
 }
 
-@media only screen and (max-width: 600px){
-    
-    nav{
+@media only screen and (max-width: 600px) {
+
+    nav {
         visibility: hidden;
     }
 
-    main{
+    main {
         display: none;
     }
 
-    .mobile{
+    .mobile {
         display: block;
         color: white;
         width: 100%;
@@ -531,10 +531,30 @@ $color-white: #212121;
 
 }
 
-.modal-body{
+.modal-body {
     height: 700px;
 }
 
-.calendar{
+.calendar {
     width: 80%;
+}
+
+.pomodoro-timer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#timer-display {
+    font-size: 48px;
+    margin: 20px 0;
+}
+
+.pomodoro{
+    height: 300px;
+}
+
+.pomodoro-timer button {
+    font-size: 16px;
+    margin: 5px;
+    padding: 10px 20px;
 }
