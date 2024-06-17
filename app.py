@@ -315,9 +315,9 @@ def calendar_events():
             user_id = session['user_id']
             db = get_db()
             cursor = db.cursor()
-            events = cursor.execute("SELECT title, due_date FROM tasks WHERE user_id = ? AND due_date IS NOT NULL", (user_id,)).fetchall()
+            events = cursor.execute("SELECT title, due_date, project_id FROM tasks WHERE user_id = ? AND due_date IS NOT NULL", (user_id,)).fetchall()
 
-            events_list = [{'title': event[0], 'start': event[1]} for event in events]
+            events_list = [{'title': event[0], 'start': event[1], 'description': event[2]} for event in events]
 
             db.close()
 

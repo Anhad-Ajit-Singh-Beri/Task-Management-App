@@ -530,3 +530,11 @@ $color-white: #212121;
     }
 
 }
+
+.modal-body{
+    height: 700px;
+}
+
+.calendar{
+    width: 80%;
+}

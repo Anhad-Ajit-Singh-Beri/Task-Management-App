@@ -157,7 +157,7 @@ Home
 
 <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="calendarModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="calendarModalLabel">Calendar Events</h5>
@@ -166,42 +166,64 @@ Home
                 </button>
             </div>
             <div class="modal-body">
-                <div id="calendarEvents"></div> <!-- Placeholder for calendar events -->
+                <div id="calendar"></div> <!-- FullCalendar will render inside this div -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="fetchEventsButton">Fetch Events</button>
             </div>
         </div>
     </div>
 </div>
-</div>
+
+<!-- Include jQuery and dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js"></script>
+
+<!-- Include FullCalendar CSS and JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.js"></script>
 
 <script>
-    // JavaScript code to fetch and display calendar events
-    $(document).ready(function () {
-        // Function to fetch calendar events via AJAX
+    $(document).ready(function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth', // Set initial view to month view
+            events: '/calendar_events', // Endpoint to fetch events from Flask backend
+            eventDidMount: function(info) {
+                // Optional: Modify event rendering
+                info.el.style.backgroundColor = 'red';
+            }
+        });
+
+        // Function to fetch calendar events manually if needed
         function fetchCalendarEvents() {
             $.ajax({
                 url: '/calendar_events',
                 type: 'GET',
-                success: function (data) {
-                    // Process data (events) returned from the server
-                    console.log('Calendar events:', data);
-                    // Update calendar or handle data as needed
-                    // For example, if using FullCalendar:
-                    // $('#calendar').fullCalendar('addEventSource', data);
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data); // Log events to console for debugging
+                    calendar.removeAllEvents(); // Remove all existing events
+                    calendar.addEventSource(data); // Add new events
                 },
-                error: function (xhr, status, error) {
+                error: function(error) {
                     console.error('Error fetching calendar events:', error);
-                    // Handle error condition on the frontend
                 }
             });
         }
 
-        // Event listener for modal open event
+        // Render the calendar when the modal is shown
         $('#calendarModal').on('shown.bs.modal', function () {
+            calendar.render();
             fetchCalendarEvents();  // Fetch calendar events when modal is shown
         });
+
+        // Optional: Add a button to manually fetch events
+        document.getElementById('fetchEventsButton').addEventListener('click', fetchCalendarEvents);
     });
 </script>
 
