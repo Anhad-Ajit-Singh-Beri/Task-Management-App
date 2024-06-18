@@ -247,15 +247,14 @@ Home
             fetchCalendarEvents();  // Fetch calendar events when modal is shown
         });
 
-        // Optional: Add a button to manually fetch events
         document.getElementById('fetchEventsButton').addEventListener('click', fetchCalendarEvents);
     });
 
     let timer;
     let isRunning = false;
-    let isWorkSession = true; // Flag to track work/break session
-    let workTime = 3; // 25 minutes in seconds
-    let breakTime = 2; // 5 minutes in seconds
+    let isWorkSession = true;
+    let workTime = 1500;
+    let breakTime = 300;
     let timeLeft = workTime;
 
     function updateDisplay() {
@@ -270,8 +269,7 @@ Home
         timer = setInterval(() => {
             timeLeft--;
             updateDisplay();
-            if (timeLeft <= 0) {
-                clearInterval(timer);
+            if (timeLeft <= 0) { 
                 isWorkSession = !isWorkSession;
                 timeLeft = isWorkSession ? workTime : breakTime;
                 updateDisplay();
@@ -289,8 +287,7 @@ Home
     function resetTimer() {
         clearInterval(timer);
         isRunning = false;
-        isWorkSession = true;
-        timeLeft = workTime;
+        timeLeft = isWorkSession ? workTime : breakTime;
         updateDisplay();
     }
 
