@@ -1,5 +1,6 @@
 # NovaQuest: A Task Management App
-#### Video Demo:  <URL [HERE](https://youtu.be/SyVjhQ_o6LE)>
+
+
 #### Description: Nova Quest is a task management app. It enables users to plan their projects and break them down into smaller steps. Nova allows users to create multiple projects with different tasks consiting of a title, a due date and a priority level. To create this application I have used HTML, CSS and Javascript for the frontend. Building this website I learnt a lot about these languages especially html and css. By the end I was familiar with many html tags and css property-value pairs. To save the users data in a database I utalised SQL and python. The Flask library came in handy in this process. I defined a basic structure for the page in layout.html which was extended to other pages using Jinja. I have implmented a login/register system to save users data. 
 
 ### App.py
