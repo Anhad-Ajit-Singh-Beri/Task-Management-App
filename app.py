@@ -327,8 +327,6 @@ def calendar_events():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
-
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
