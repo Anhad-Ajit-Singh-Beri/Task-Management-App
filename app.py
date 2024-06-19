@@ -225,7 +225,6 @@ def sort_tasks(criteria):
         user_id = session['user_id']
         db = get_db()
         cursor = db.cursor()
-
         if criteria == 'title':
             tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? ORDER BY title", (user_id,)).fetchall()
         elif criteria == 'due_date':
@@ -315,7 +314,7 @@ def calendar_events():
             user_id = session['user_id']
             db = get_db()
             cursor = db.cursor()
-            events = cursor.execute("SELECT title, due_date, project_id FROM tasks WHERE user_id = ? AND due_date IS NOT NULL", (user_id,)).fetchall()
+            events = cursor.execute("SELECT title, due_date, project_id FROM tasks WHERE user_id = ? AND due_date IS NOT NULL AND status=?", (user_id, "pending")).fetchall()
 
             events_list = [{'title': event[0], 'start': event[1], 'description': event[2]} for event in events]
 
@@ -327,6 +326,7 @@ def calendar_events():
         return jsonify({'error': 'User session not found or expired'}), 403
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 
 if __name__ == '__main__':
