@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, g, session, redirect, url_for
 from flask_session import Session
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import date
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile('config.py')
@@ -305,6 +306,21 @@ def progress():
         
         return jsonify(prog_list)
 
+
+@app.route('/notification', methods=['GET'])
+def notifications():
+     if 'user_id' in session:
+        user_id = session['user_id']
+        db = get_db()
+        cursor = db.cursor()
+        today = date.today().strftime("%Y %m %d")
+        dates=[today]
+
+        dueDates = cursor.execute("SELECT due_date FROM tasks WHERE user_id=? AND status =?", (user_id, 'pending'))
+        for i in cursor: 
+            dates.append(i)
+        
+        return jsonify(dates)
 
 
 
