@@ -21,7 +21,7 @@ Home
         {% endfor %}
     </div>
     <div class="button-container">
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+    <button class="btn btn-primary" id="off-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
             aria-controls="offcanvasScrolling">
             <i class="fa-gear fa-solid"></i> Settings
         </button>
@@ -50,11 +50,19 @@ Home
     <div class="offcanvas-body">
         <h3><strong>Points: </strong>{{ points[0] }}</h3>
         <hr>
-        <section class="category-section">
+        <form action="{{ url_for('categories') }}" method="post">
             <h2>Categories</h2>
-            <ul id="categoryList"></ul>
+            <input type="text" name="category" placeholder="Add Category">
             <button id="addcategoryButton">Add Categories</button>
-        </section>
+            <ul id="categoryList">
+                {% for category in categories %}
+                <li>
+                    {{ category[0] }}
+                    <a class="btn btn-primary" href="{{ url_for('delete_category', name = category[0])}}"><i class='fa-solid fa-trash'></i></a>
+                </li>
+                {% endfor %}
+            </ul>
+        </form>
         <hr>
         <div class="progress">
             <div class="progress-bar progress-bar-striped bg-danger" id="progress" role="progressbar" style="width: 0%"
@@ -96,10 +104,10 @@ Home
                 <option>Low</option>
             </select>
             <select class="pri" name="category" required>
-                <option disabled selected> -- Select</option>
-                <option id="cat-ops">Cat 1</option>
-                <option id="cat-ops">Cat 2</option>
-                <option id="cat-ops">Cat 3</option>
+                <option disabled selected> Select</option>
+                {% for category in categories %}
+                <option id="cat-ops">{{ category[0] }}</option>
+                {% endfor %}
             </select>
             <button type="submit" class="btn task-add">Add Task</button>
         </form>

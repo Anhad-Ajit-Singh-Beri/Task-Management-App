@@ -32,6 +32,16 @@ def create_tables():
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS categories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                name TEXT, 
+                user_id INTEGER, 
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        ''')
+
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS tasks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,7 +56,7 @@ def create_tables():
                 user_id INTEGER,
                 FOREIGN KEY (user_id) REFERENCES users(id),
                 FOREIGN KEY (project_id) REFERENCES projects(id)
-            )
+            )            
         ''')
 
 def get_db():
@@ -84,8 +94,10 @@ def index(project_id=None):
             current = cursor.execute("SELECT name FROM projects WHERE id = ?", (project_id,)).fetchone()
             points = cursor.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
             tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status = ?", (user_id, project_id, "pending")).fetchall() if project_id else []
+            categories = cursor.execute("SELECT name FROM categories WHERE user_id = ?", (user_id,)).fetchall()
+            print(categories)
 
-            return render_template('index.html', username=username, projects=projects, tasks=tasks, project_id=project_id, current=current, points=points)
+            return render_template('index.html', username=username, projects=projects, tasks=tasks, project_id=project_id, current=current, points=points, categories=categories)
 
     return render_template('register.html')
 
@@ -211,13 +223,15 @@ def search_tasks(project_id):
         projects = cursor.execute("SELECT * FROM projects WHERE user_id = ?", (user_id,)).fetchall()
         current = cursor.execute("SELECT name FROM projects WHERE id = ?", (project_id,)).fetchone()
         points = cursor.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
+        tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status = ?", (user_id, project_id, "pending")).fetchall() if project_id else []
+        categories = cursor.execute("SELECT name FROM categories WHERE user_id = ?", (user_id,)).fetchall()
 
         if cancel_search:
             tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status = ?", (user_id, project_id, "pending")).fetchall()
         else:
             tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND title LIKE ? AND project_id = ? AND status = ?", (user_id, f'%{search_title}%', project_id, "pending")).fetchall()
 
-        return render_template('index.html', tasks=tasks, project_id=project_id, projects=projects, current=current, points=points)
+        return render_template('index.html', projects=projects, tasks=tasks, project_id=project_id, current=current, points=points, categories=categories)
 
     return render_template('login.html')
 
@@ -306,6 +320,27 @@ def progress():
         
         return jsonify(prog_list)
 
+@app.route('/categories', methods=['POST'])
+def categories():
+     if 'user_id' in session:
+        user_id = session['user_id']
+        db = get_db()
+        cursor = db.cursor()
+        name = request.form.get('category')
+        project_id = 1
+
+        cursor.execute("INSERT INTO categories (name, user_id) VALUES (?, ?)",(name , user_id))
+        db.commit()
+
+        projects = cursor.execute("SELECT * FROM projects WHERE user_id = ?", (user_id,)).fetchall()
+        current = cursor.execute("SELECT name FROM projects WHERE id = ?", (project_id,)).fetchone()
+        points = cursor.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
+        tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status = ?", (user_id, project_id, "pending")).fetchall() if project_id else []
+        categories = cursor.execute("SELECT name FROM categories WHERE user_id = ?", (user_id,)).fetchall()
+
+        db.close()
+        return render_template('index.html', projects=projects, tasks=tasks, project_id=project_id, current=current, points=points, categories=categories)
+    #  keep offcanvas open after adding. No reload
 
 @app.route('/notification', methods=['GET'])
 def notifications():
@@ -321,6 +356,20 @@ def notifications():
             dates.append(i)
         
         return jsonify(dates)
+
+@app.route('/delete_category/<name>', methods=['GET'])
+def delete_category(name):
+    if 'user_id' in session:
+        user_id = session['user_id']
+        db = get_db()
+        cursor = db.cursor()
+
+        cursor.execute("DELETE FROM categories WHERE user_id = ? AND name = ?", (user_id, name))
+        db.commit()
+
+        return redirect(url_for('index'))
+
+    return redirect(url_for('login'))
 
 
 
