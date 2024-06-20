@@ -219,7 +219,7 @@ Home
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="pomodoroModalLabel">Pomodoro Timer</h5>
-                <button type="button" onclick='stopTimer()' class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" onclick='resetTimer()' class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -235,22 +235,6 @@ Home
     </div>
 </div>
 
-<div id="editcategoryModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Edit category</h2>
-      <label for="categoryEmail"><strong>Email:</strong></label>
-      <input class="modalInput" type="email" id="categoryEmail"><br>
-      <label for="categoryName"><strong>Name:</strong></label>
-      <input class="modalInput" type="text" id="categoryName"><br>
-      <label for="categoryImageUpload"><strong>Upload Image:</strong></label>
-      <input class="modalInput" type="file" id="categoryImageUpload"><br>
-      <label for="categoryImageUrl"><strong>Or Image URL:</strong></label>
-      <input class="modalInput" type="url" id="categoryImageUrl"><br>
-      <button id="savecategory">Save</button>
-    </div>
-  </div>
-
 <!-- Include jQuery and dependencies -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -262,6 +246,5 @@ Home
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.js"></script>
 
 <script src="../static/script.js"></script>
-<script src="../static/options.js"></script>
 
 {% endblock %}

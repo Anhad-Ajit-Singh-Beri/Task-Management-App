@@ -198,46 +198,6 @@ def delete_task(task_id):
 
     return redirect(url_for('login'))
 
-@app.route('/filter/<category>/<criteria>')
-def filter_and_sort_tasks(category, criteria):
-    if 'user_id' in session:
-        user_id = session['user_id']
-        db = get_db()
-        cursor = db.cursor()
-
-        project_id = cursor.execute("SELECT project_id FROM tasks WHERE user_id = ? AND category = ?", (user_id, category)).fetchone()[0]
-        tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND category = ?", (user_id, category)).fetchall()
-
-        if criteria == 'title':
-            tasks.sort(key=lambda x: x[1])
-        elif criteria == 'due_date':
-            tasks.sort(key=lambda x: x[3] if x[3] else '9999-12-31')
-        elif criteria == 'priority':
-            tasks.sort(key=lambda x: x[4])
-
-        return render_template('index.html', project_id=project_id, tasks=tasks, active_filter=category, active_sort=criteria)
-
-    return render_template('login.html')
-
-@app.route('/sort/<criteria>')
-def sort_tasks(criteria):
-    if 'user_id' in session:
-        user_id = session['user_id']
-        db = get_db()
-        cursor = db.cursor()
-        if criteria == 'title':
-            tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? ORDER BY title", (user_id,)).fetchall()
-        elif criteria == 'due_date':
-            tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? ORDER BY due_date", (user_id,)).fetchall()
-        elif criteria == 'priority':
-            tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? ORDER BY priority", (user_id,)).fetchall()
-        else:
-            tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? ORDER BY id", (user_id,)).fetchall()
-
-        return render_template('index.html', tasks=tasks, active_sort=criteria)
-
-    return render_template('login.html')
-
 @app.route('/search_tasks/<int:project_id>', methods=['GET'])
 def search_tasks(project_id):
     if 'user_id' in session:
@@ -326,6 +286,9 @@ def calendar_events():
         return jsonify({'error': 'User session not found or expired'}), 403
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+
 
 if __name__ == '__main__':
     create_tables()
