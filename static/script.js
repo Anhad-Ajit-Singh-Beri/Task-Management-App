@@ -1,5 +1,6 @@
 $(document).ready(function () {
     var calendarEl = document.getElementById('calendar');
+    var progBar = document.getElementById('progress');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth', // Set initial view to month view
@@ -9,6 +10,26 @@ $(document).ready(function () {
             info.el.style.backgroundColor = 'red';
         }
     });
+
+    function fetchProgress() {
+        $.ajax({
+            url: '/progress',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data[0]); 
+                console.log(data[1]);
+                progress = ((data[1] - data[0]) / data[1]) * 100
+                console.log(progress)
+                progBar.style.width = progress + "%"                        
+            },
+            error: function (error) {
+                console.error('Error fetching calendar events:', error);
+            }
+        });
+    }
+
+    fetchProgress()
 
     // Function to fetch calendar events manually if needed
     function fetchCalendarEvents() {

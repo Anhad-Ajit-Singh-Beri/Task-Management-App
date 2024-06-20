@@ -288,6 +288,24 @@ def calendar_events():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/progress', methods=['GET'])
+def progress():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        db = get_db()
+        cursor = db.cursor()
+        prog_list = []
+
+        pending = cursor.execute("SELECT count(*) FROM tasks WHERE user_id = ? AND status = ?", (user_id, "pending"))
+        for i in cursor:
+            prog_list.append(i)
+        total = cursor.execute("SELECT count(*) FROM tasks WHERE user_id = ?", (user_id, ))
+        for i in cursor:
+            prog_list.append(i)
+        
+        return jsonify(prog_list)
+
+
 
 
 if __name__ == '__main__':
