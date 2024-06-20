@@ -46,6 +46,12 @@ Home
     </div>
     <div class="offcanvas-body">
         <h3><strong>Points: </strong>{{ points[0] }}</h3>
+        <hr>
+        <section class="category-section">
+            <h2>Categories</h2>
+            <ul id="categoryList"></ul>
+            <button id="addcategoryButton">Add Categories</button>
+        </section>
     </div>
 </div>
 
@@ -89,8 +95,8 @@ Home
         {% endif %}
         {% for task in tasks %}
         <div class="card info">
-            <button type="button" style="color: white; background: none; border: none;" data-bs-toggle="modal" data-bs-target="#commentModal"
-                aria-label="See Comment">
+            <button type="button" style="color: white; background: none; border: none;" data-bs-toggle="modal"
+                data-bs-target="#commentModal" aria-label="See Comment">
                 <i class="fa-solid fa-message comments"></i>
             </button>
             <div class="check">
@@ -229,6 +235,22 @@ Home
     </div>
 </div>
 
+<div id="editcategoryModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Edit category</h2>
+      <label for="categoryEmail"><strong>Email:</strong></label>
+      <input class="modalInput" type="email" id="categoryEmail"><br>
+      <label for="categoryName"><strong>Name:</strong></label>
+      <input class="modalInput" type="text" id="categoryName"><br>
+      <label for="categoryImageUpload"><strong>Upload Image:</strong></label>
+      <input class="modalInput" type="file" id="categoryImageUpload"><br>
+      <label for="categoryImageUrl"><strong>Or Image URL:</strong></label>
+      <input class="modalInput" type="url" id="categoryImageUrl"><br>
+      <button id="savecategory">Save</button>
+    </div>
+  </div>
+
 <!-- Include jQuery and dependencies -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -239,89 +261,7 @@ Home
 <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.js"></script>
 
-<script>
-    $(document).ready(function () {
-        var calendarEl = document.getElementById('calendar');
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth', // Set initial view to month view
-            events: '/calendar_events', // Endpoint to fetch events from Flask backend
-            eventDidMount: function (info) {
-                // Optional: Modify event rendering
-                info.el.style.backgroundColor = 'red';
-            }
-        });
-
-        // Function to fetch calendar events manually if needed
-        function fetchCalendarEvents() {
-            $.ajax({
-                url: '/calendar_events',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data); // Log events to console for debugging
-                    calendar.removeAllEvents(); // Remove all existing events
-                    calendar.addEventSource(data); // Add new events
-                },
-                error: function (error) {
-                    console.error('Error fetching calendar events:', error);
-                }
-            });
-        }
-
-        // Render the calendar when the modal is shown
-        $('#calendarModal').on('shown.bs.modal', function () {
-            calendar.render();
-            fetchCalendarEvents();  // Fetch calendar events when modal is shown
-        });
-
-        document.getElementById('fetchEventsButton').addEventListener('click', fetchCalendarEvents);
-    });
-
-    let timer;
-    let isRunning = false;
-    let isWorkSession = true;
-    let workTime = 1500;
-    let breakTime = 300;
-    let timeLeft = workTime;
-
-    function updateDisplay() {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        document.getElementById('timer-display').innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-
-    function startTimer() {
-        if (isRunning) return;
-        isRunning = true;
-        timer = setInterval(() => {
-            timeLeft--;
-            updateDisplay();
-            if (timeLeft <= 0) {
-                isWorkSession = !isWorkSession;
-                timeLeft = isWorkSession ? workTime : breakTime;
-                updateDisplay();
-                if (isRunning) startTimer();
-            }
-        }, 1000);
-    }
-
-
-    function stopTimer() {
-        clearInterval(timer);
-        isRunning = false;
-    }
-
-    function resetTimer() {
-        clearInterval(timer);
-        isRunning = false;
-        timeLeft = isWorkSession ? workTime : breakTime;
-        updateDisplay();
-    }
-
-
-    updateDisplay();
-
-</script>
+<script src="../static/script.js"></script>
+<script src="../static/options.js"></script>
 
 {% endblock %}
