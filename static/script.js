@@ -6,7 +6,6 @@ $(document).ready(function () {
         initialView: 'dayGridMonth', // Set initial view to month view
         events: '/calendar_events', // Endpoint to fetch events from Flask backend
         eventDidMount: function (info) {
-            // Optional: Modify event rendering
             info.el.style.backgroundColor = 'red';
         }
     });
@@ -21,7 +20,9 @@ $(document).ready(function () {
                 console.log(data[1]);
                 progress = ((data[1] - data[0]) / data[1]) * 100
                 console.log(progress)
-                progBar.style.width = progress + "%"
+                val = progress + "%"
+                progBar.style.width = val
+                progBar.innerText = val.split(".")[0] + "%"
             },
             error: function (error) {
                 console.error('Error fetching progress:', error);
@@ -186,6 +187,3 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
-
-
-
