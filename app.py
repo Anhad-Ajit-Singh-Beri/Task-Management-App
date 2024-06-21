@@ -94,7 +94,8 @@ def index(project_id=None):
             current = cursor.execute("SELECT name FROM projects WHERE id = ?", (project_id,)).fetchone()
             points = cursor.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
             tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status = ?", (user_id, project_id, "pending")).fetchall() if project_id else []
-            categories = cursor.execute("SELECT name FROM categories WHERE user_id = ?", (user_id,)).fetchall()
+            categories = cursor.execute("SELECT name FROM categories WHERE user_id = ?", (user_id,)).fetchall()            
+        
             print(categories)
 
             return render_template('index.html', username=username, projects=projects, tasks=tasks, project_id=project_id, current=current, points=points, categories=categories)
@@ -331,16 +332,11 @@ def categories():
 
         cursor.execute("INSERT INTO categories (name, user_id) VALUES (?, ?)",(name , user_id))
         db.commit()
-
-        projects = cursor.execute("SELECT * FROM projects WHERE user_id = ?", (user_id,)).fetchall()
-        current = cursor.execute("SELECT name FROM projects WHERE id = ?", (project_id,)).fetchone()
-        points = cursor.execute("SELECT points FROM users WHERE id = ?", (user_id,)).fetchone()
-        tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status = ?", (user_id, project_id, "pending")).fetchall() if project_id else []
-        categories = cursor.execute("SELECT name FROM categories WHERE user_id = ?", (user_id,)).fetchall()
-
         db.close()
-        return render_template('index.html', projects=projects, tasks=tasks, project_id=project_id, current=current, points=points, categories=categories)
+
+        return redirect(url_for('index'))
     #  keep offcanvas open after adding. No reload
+
 
 @app.route('/notification', methods=['GET'])
 def notifications():
@@ -351,7 +347,7 @@ def notifications():
         today = date.today().strftime("%Y %m %d")
         dates=[today]
 
-        dueDates = cursor.execute("SELECT due_date FROM tasks WHERE user_id=? AND status =?", (user_id, 'pending'))
+        cursor.execute("SELECT due_date FROM tasks WHERE user_id=? AND status =?", (user_id, 'pending'))
         for i in cursor: 
             dates.append(i)
         
@@ -370,7 +366,6 @@ def delete_category(name):
         return redirect(url_for('index'))
 
     return redirect(url_for('login'))
-
 
 
 if __name__ == '__main__':
