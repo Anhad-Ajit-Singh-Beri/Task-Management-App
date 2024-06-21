@@ -72,6 +72,18 @@ Home
 </div>
 
 <div class="main">
+
+    <div>
+        <form method="GET" action="{{ url_for('index', project_id=project_id) }}">
+            <label for="sort_by">Sort by:</label>
+            <select name="sort_by" id="sort_by" onchange="this.form.submit()">
+                <option value="priority" {% if request.args.get('sort_by') == 'priority' %}selected{% endif %}>Priority</option>
+                <option value="due_date" {% if request.args.get('sort_by') == 'due_date' %}selected{% endif %}>Due Date</option>
+                <option value="title" {% if request.args.get('sort_by') == 'title' %}selected{% endif %}>Alphabetical Order</option>
+            </select>
+        </form>
+    </div>
+
     {% if project_id %}
     <div class="head">
         <div class="heading">{{ current[0] }}</div>
