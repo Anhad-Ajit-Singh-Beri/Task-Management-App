@@ -103,11 +103,12 @@ def index(project_id=None):
             elif sort_by == 'title':
                 tasks = get_tasks_sorted_by_title(user_id, project_id)
             else:
-                tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ?", (user_id, project_id)).fetchall() if project_id else []
+                tasks = cursor.execute("SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status=?", (user_id, project_id, 'pending')).fetchall()
 
             return render_template('index.html', username=username, projects=projects, tasks=tasks, project_id=project_id, current=current, points=points, categories=categories)
 
     return render_template('register.html')
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -380,30 +381,30 @@ def get_tasks_sorted_by_priority(user_id, project_id):
     db = get_db()
     cursor = db.cursor()
     tasks = cursor.execute("""
-        SELECT * FROM tasks WHERE user_id = ? AND project_id = ? ORDER BY 
+        SELECT * FROM tasks WHERE user_id = ? AND project_id = ?  AND status=? ORDER BY 
         CASE
             WHEN priority = 'high' THEN 1
             WHEN priority = 'medium' THEN 2
             WHEN priority = 'low' THEN 3
             ELSE 4
         END
-    """, (user_id, project_id)).fetchall()
+    """, (user_id, project_id, 'pending')).fetchall()
     return tasks
 
 def get_tasks_sorted_by_due_date(user_id, project_id):
     db = get_db()
     cursor = db.cursor()
     tasks = cursor.execute("""
-        SELECT * FROM tasks WHERE user_id = ? AND project_id = ? ORDER BY due_date ASC
-    """, (user_id, project_id)).fetchall()
+        SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status=? ORDER BY due_date ASC
+    """, (user_id, project_id, 'pending')).fetchall()
     return tasks
 
 def get_tasks_sorted_by_title(user_id, project_id):
     db = get_db()
     cursor = db.cursor()
     tasks = cursor.execute("""
-        SELECT * FROM tasks WHERE user_id = ? AND project_id = ? ORDER BY title ASC
-    """, (user_id, project_id)).fetchall()
+        SELECT * FROM tasks WHERE user_id = ? AND project_id = ? AND status=? ORDER BY title ASC
+    """, (user_id, project_id, 'pending')).fetchall()
     return tasks
 
 
