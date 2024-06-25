@@ -77,7 +77,8 @@ Home
         <form method="GET" action="{{ url_for('index', project_id=project_id) }}">
             <label for="sort_by">Sort by:</label>
             <select name="sort_by" id="sort_by" onchange="this.form.submit()">
-                <option value="priority" {% if request.args.get('sort_by') == 'priority' %}selected{% endif %}>Priority</option>
+                <option value="priority:hightolow" {% if request.args.get('sort_by') == 'priority:hightolow' %}selected{% endif %}>Priority: High to Low</option>
+                <option value="priority:lowtohigh" {% if request.args.get('sort_by') == 'priority:lowtohigh' %}selected{% endif %}>Priority: Low to High</option>
                 <option value="due_date" {% if request.args.get('sort_by') == 'due_date' %}selected{% endif %}>Due Date</option>
                 <option value="title" {% if request.args.get('sort_by') == 'title' %}selected{% endif %}>Alphabetical Order</option>
             </select>
@@ -137,7 +138,8 @@ Home
                 <div class="title">{{ task[1] }}</div>
                 <div class="e-info">
                     <div class="date">{{ task[3] }}</div>
-                    <div class="priority">{{ task[5] }}</div>
+                    <div class="sub-info">{{ task[5] }}</div>
+                    <div class="sub-info">{{ task[6] }}</div>
                 </div>
             </div>
             <div class="actions">

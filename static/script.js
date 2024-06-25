@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    var calendarEl = document.getElementById('calendar');
-    var progBar = document.getElementById('progress');
+    let calendarEl = document.getElementById('calendar');
+    let progBar = document.getElementById('progress');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    let calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth', // Set initial view to month view
         events: '/calendar_events', // Endpoint to fetch events from Flask backend
         eventDidMount: function (info) {
@@ -19,10 +19,9 @@ $(document).ready(function () {
                 console.log(data[0]);
                 console.log(data[1]);
                 progress = ((data[1] - data[0]) / data[1]) * 100
-                console.log(progress)
                 val = progress + "%"
                 progBar.style.width = val
-                progBar.innerText = val.split(".")[0] + "%"
+                progBar.innerText = val.split(".")[0].split('%')[0] + "%"
             },
             error: function (error) {
                 console.error('Error fetching progress:', error);

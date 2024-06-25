@@ -96,8 +96,10 @@ def index(project_id=None):
             categories = cursor.execute("SELECT name FROM categories WHERE user_id = ?", (user_id,)).fetchall()
 
             sort_by = request.args.get('sort_by', 'priority')
-            if sort_by == 'priority':
-                tasks = get_tasks_sorted_by_priority(user_id, project_id)
+            if sort_by == 'priority:hightolow':
+                tasks = get_tasks_sorted_by_priority(user_id, project_id, True)
+            elif sort_by == 'priority:lowtohigh':
+                tasks = get_tasks_sorted_by_priority(user_id, project_id, False)
             elif sort_by == 'due_date':
                 tasks = get_tasks_sorted_by_due_date(user_id, project_id)
             elif sort_by == 'title':
@@ -377,19 +379,32 @@ def delete_category(name):
     return redirect(url_for('login'))
 
 
-def get_tasks_sorted_by_priority(user_id, project_id):
+def get_tasks_sorted_by_priority(user_id, project_id, asc):
     db = get_db()
     cursor = db.cursor()
-    tasks = cursor.execute("""
-        SELECT * FROM tasks WHERE user_id = ? AND project_id = ?  AND status=? ORDER BY 
-        CASE
-            WHEN priority = 'high' THEN 1
-            WHEN priority = 'medium' THEN 2
-            WHEN priority = 'low' THEN 3
-            ELSE 4
-        END
-    """, (user_id, project_id, 'pending')).fetchall()
+    if asc == True:
+        tasks = cursor.execute("""
+            SELECT * FROM tasks WHERE user_id = ? AND project_id = ?  AND status=? ORDER BY 
+            CASE
+                WHEN priority = 'high' THEN 1
+                WHEN priority = 'medium' THEN 2
+                WHEN priority = 'low' THEN 3
+                ELSE 4
+            END
+        """, (user_id, project_id, 'pending')).fetchall()
+    else: 
+        tasks = cursor.execute("""
+            SELECT * FROM tasks WHERE user_id = ? AND project_id = ?  AND status=? ORDER BY 
+            CASE
+                WHEN priority = 'low' THEN 1
+                WHEN priority = 'medium' THEN 2
+                WHEN priority = 'high' THEN 3
+                ELSE 4
+            END
+        """, (user_id, project_id, 'pending')).fetchall()
+
     return tasks
+
 
 def get_tasks_sorted_by_due_date(user_id, project_id):
     db = get_db()
@@ -408,7 +423,12 @@ def get_tasks_sorted_by_title(user_id, project_id):
     return tasks
 
 
+def filter_tasks(user_id, project_id, category):
+    db=get_db()
+    cursor= db.cursor()
+    tasks = cursor.execute("SELECT * FROM tasks WHERE user_id=? AND project_id=? AND status = ? AND cateory = ?", (user_id, project_id, 'pending', category)).fetchall()
 
+    return tasks 
 
 if __name__ == '__main__':
     create_tables()
